@@ -11,14 +11,15 @@ logger = logging.getLogger(__name__)
 
 def _import_fastai2_module():
     try:
-        import fastai2.basics
+        import fastai.basics
+        assert int(fastai.__version__[0]) >= 2
     except ImportError:
         raise MissingDependencyException(
             "fastai2 package is required to use "
             "bentoml.artifacts.Fastai2ModelArtifact"
         )
 
-    return fastai2
+    return fastai
 
 
 class Fastai2ModelArtifact(BentoServiceArtifact):
@@ -66,7 +67,7 @@ class Fastai2ModelArtifact(BentoServiceArtifact):
             "BentoService definition file or manually add them via "
             "`@env(pip_packages=['torchvision'])` when defining a BentoService"
         )
-        env.add_pip_packages(['torch', "fastcore", "fastai2"])
+        env.add_pip_packages(['torch', "fastcore", "fastai"])
 
     def save(self, dst):
         self._model.export(fname=self._file_name)
